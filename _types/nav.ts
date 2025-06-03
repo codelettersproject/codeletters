@@ -3,15 +3,11 @@ import React from "react";
 import type { IconProps } from "@/components";
 
 
-export interface IMenuEntry {
+export type IMenuEntry = {
   label: string;
+  htmlTitle?: string;
   icon?: IconProps["icon"] | Exclude<React.ReactNode, string>;
   activeIcon?: IconProps["icon"] | Exclude<React.ReactNode, string>;
-  path: string | {
-    pathname: string;
-    query?: string;
-    hash?: string;
-  };
   color?: string;
   contrast?: string;
   shift?: `${"icon" | "label" | "both"}-${"up" | "down"}` | {
@@ -20,4 +16,21 @@ export interface IMenuEntry {
   };
   routerMath?: RegExp;
   matchRoutes?: string[];
-}
+} & (
+  | {
+    type: "go";
+    path: string | {
+      pathname: string;
+      query?: string;
+      hash?: string;
+    }
+  }
+  | {
+    type: "do";
+    action: () => unknown;
+  }
+  | {
+    type: "fwr";
+    href: string;
+  }
+);

@@ -102,6 +102,12 @@
   padding: 1.2rem 1.875rem;
   margin-left: var(--sidebar-width);
   overflow: auto;
+  position: relative;
+
+  &.ns {
+    width: 100%;
+    margin-left: 0 !important;
+  }
 
   @include transition(width .15s ease-in-out);
 

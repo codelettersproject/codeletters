@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import type { Dict } from "typesdk/types";
 import { inorderTransversal, type MultidimensionalArray } from "typesdk/array";
 
+import { useMediaQuery } from "@/hooks";
 import { Link, Typography } from "@/components";
 
 
@@ -30,6 +31,42 @@ export function cn(...values: MultidimensionalArray<string | Dict<boolean | null
   }
 
   return result.join(" ");
+}
+
+
+export function addOpacityToHexColorAsRGBA(hexColor: string, opacity: number): string {
+  if (!/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hexColor) || opacity < 0 || opacity > 1) {
+    throw new Error("Invalid input. Please provide a valid hex color code and opacity value between 0 and 1.");
+  }
+
+  // Convert hex to RGB
+  let r: number = 0;
+  let g: number = 0;
+  let b: number = 0;
+
+  if (hexColor.length === 4) {
+    r = parseInt(hexColor[1] + hexColor[1], 16);
+    g = parseInt(hexColor[2] + hexColor[2], 16);
+    b = parseInt(hexColor[3] + hexColor[3], 16);
+  } else if (hexColor.length === 7) {
+    r = parseInt(hexColor.slice(1, 3), 16);
+    g = parseInt(hexColor.slice(3, 5), 16);
+    b = parseInt(hexColor.slice(5, 7), 16);
+  }
+
+  // Ensure RGB values are valid
+  if(isNaN(r) || isNaN(g) || isNaN(b)) {
+    throw new Error("Invalid hex color code.");
+  }
+
+  // Calculate the new RGBA values
+  const rgbaColor = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  return rgbaColor;
+}
+
+
+export function useIsMobile(): boolean {
+  return useMediaQuery("(max-width: 61.25rem)");
 }
 
 

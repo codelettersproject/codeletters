@@ -8,20 +8,63 @@ import { cn } from "@/utils";
 import Button from "./Button";
 import { Typography } from "./modular";
 import { clampLine } from "@/styles/theme";
-import navMenu from "@/resources/static/nav-menu";
+import type { IMenuEntry } from "@/_types";
 import Dropdown, { DropdownItem } from "./Dropdown";
 
 
 const Sidebar = () => {
   const { asPath, push: navigate } = useRouter();
 
-  const [state, setState] = useState({ activeIndex: -1 });
+  const [state, setState] = useState({
+    activeIndex: -1,
+    shouldShowSourceCode: true,
+  });
+
+
+  const navMenu: IMenuEntry[] = [
+    {
+      type: "go",
+      label: "Página Inicial",
+      icon: "home",
+      path: "/dashboard",
+      htmlTitle: "Ir para a página inicial",
+    },
+    {
+      type: "go",
+      label: "Meus Cartões",
+      icon: "stories",
+      path: "/dashboard/card",
+      routerMath: /\/dashboard\/card(.*)/,
+      htmlTitle: "Veja seus cartões",
+    },
+    {
+      type: "go",
+      label: "Novo Cartão",
+      icon: "add-box",
+      path: "/dashboard/setup-card",
+      htmlTitle: "Criar um novo cartão",
+      routerMath: /\/dashboard\/setup-card(.*)/,
+    },
+    (
+      state.shouldShowSourceCode && !!process.env.NEXT_PUBLIC_APP_REPOSITORY ? {
+        label: "Código Fonte",
+        icon: "code-folder",
+        htmlTitle: "Veja o código fonte do projeto no GitHub",
+        type: "fwr",
+        href: process.env.NEXT_PUBLIC_APP_REPOSITORY,
+      } : null
+    ),
+  ].filter(Boolean) as IMenuEntry[];
+
 
   useEffect(() => {
     // dispatch(setIsDashboardSidebarActive(false));
 
     setState(prev => {
       const activeIndex = navMenu.findIndex(item => {
+        if(item.type !== "go")
+          return false;
+        
         const currentPath = ssrSafeWindow?.location.pathname.split("?")[0] || "";
           
         if(typeof item.path !== "string")
@@ -69,6 +112,8 @@ const Sidebar = () => {
 
                 return (
                   <Button
+                    tabIndex={0}
+                    title={item.htmlTitle || item.label}
                     key={`drawer-menu-item-${index}`}
                     className={cn("sidebar-menu__item", c, { active: isActive })}
                     sx={{
@@ -79,7 +124,19 @@ const Sidebar = () => {
                       if(target.classList.contains("active") || isActive)
                         return;
 
-                      navigate(item.path);
+                      if(item.type === "do") {
+                        item.action?.bind(null)();
+                        return;
+                      }
+
+                      if(item.type === "fwr" && !!item.href) {
+                        window.open(item.href, "_blank", "noopener,noreferrer");
+                        return;
+                      }
+
+                      if(item.type === "go") {
+                        navigate(item.path);
+                      }
                     }) as () => void}
                   >
                     <>
@@ -115,7 +172,7 @@ const Sidebar = () => {
                     User.Name
                   </Typography.Text>
                   <Typography.Text component="p">
-                    User.NormalizedRole
+                    User.Email
                   </Typography.Text>
                 </section>
               </div>

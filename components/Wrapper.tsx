@@ -1,12 +1,14 @@
+import Head from "next/head";
 import React, { memo } from "react";
 
+import { cn } from "@/utils";
 import Sidebar from "./Sidebar";
-import Head from "next/head";
 
 
 export type WrapperProps = {
   readonly children?: React.ReactNode;
   readonly m?: { dt?: string };
+  hs?: boolean;
 }
 
 const Wrapper = (p: WrapperProps) => {
@@ -19,8 +21,12 @@ const Wrapper = (p: WrapperProps) => {
           ) : null
         }
       </Head>
-      <Sidebar />
-      <div className="wrapper">
+      {
+        p.hs ? null : (
+          <Sidebar />
+        )
+      }
+      <div className={cn("wrapper", { ns: p.hs })}>
         {p.children}
       </div>
     </>

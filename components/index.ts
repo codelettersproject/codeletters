@@ -11,6 +11,7 @@ export {
   type DropdownProps,
 } from "./Dropdown";
 
+export { default as FormGroup, type FormGroupProps } from "./FormGroup";
 export { default as Icon, type IconProps } from "./Icon";
 export { default as Link, type LinkProps } from "./Link";
 
@@ -20,4 +21,14 @@ export {
   type StyleProps as LogoStyleProps,
 } from "./Logo";
 
+export { default as ResizableTextarea, type ResizableTextareaProps } from "./ResizableTextarea";
+
+export {
+  default as Select,
+  SelectItem,
+  type SelectItemProps,
+  type SelectProps,
+} from "./Select";
+
+export { default as SliderSwitch, type SliderSwitchProps, type ToggleEvent } from "./SliderSwitch";
 export { default as Wrapper, type WrapperProps } from "./Wrapper";
