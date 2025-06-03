@@ -1,0 +1,41 @@
+CREATE TABLE IF NOT EXISTS users (
+  user_id VARCHAR(128) NOT NULL UNIQUE PRIMARY KEY,
+  display_name VARCHAR(64) NOT NULL UNIQUE,
+  email_address TEXT NOT NULL UNIQUE,
+  email_hash TEXT NOT NULL UNIQUE,
+  password_digest TEXT NOT NULL,
+  salt TEXT NOT NULL UNIQUE,
+  nuked_at TIMESTAMP NULL,
+  created_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_metadata (
+  user_metadata_row_id SERIAL NOT NULL PRIMARY KEY,
+  user_id VARCHAR(128) NOT NULL,
+  metadata_key VARCHAR(512) NOT NULL,
+  metadata_value TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+
+CREATE TYPE card_status AS ENUM('DRAFT', 'PUBLISHED', 'BANNED');
+
+CREATE TABLE IF NOT EXISTS cards (
+  card_id VARCHAR(128) NOT NULL UNIQUE PRIMARY KEY,
+  short_code VARCHAR(32) NOT NULL UNIQUE,
+  owner_id VARCHAR(128) NOT NULL,
+  status card_status NOT NULL DEFAULT 'DRAFT'::card_status,
+  created_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP NOT NULL,
+  FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS card_chunks (
+  card_chunks_row_id SERIAL NOT NULL PRIMARY KEY,
+  card_id VARCHAR(128) NOT NULL,
+  c_idx INT NOT NULL,
+  c_hash TEXT NOT NULL,
+  c_data TEXT NOT NULL,
+  FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE ON UPDATE RESTRICT
+);

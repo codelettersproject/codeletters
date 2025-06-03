@@ -415,6 +415,15 @@ const SetupCard = () => {
                     letterSpacing: "var(--default-letter-spacing)",
                   },
 
+                  "&:focus-visible": {
+                    outlineOffset: "2px",
+                    outline: "2px solid var(--accent-color)",
+                  },
+
+                  "&:active:not([disabled])": {
+                    borderColor: "var(--color)",
+                  },
+
                   "&[disabled]": {
                     cursor: "default",
                     color: "var(--text-secondary)",
@@ -466,6 +475,11 @@ const SetupCard = () => {
               <Button
                 tabIndex={0}
                 disabled={JSON.stringify(state.cardProps) === JSON.stringify(initialCardProps)}
+                onClick={() => {
+                  if(JSON.stringify(state.cardProps) !== JSON.stringify(initialCardProps)) {
+                    window.location.href = `/dashboard/setup-card/review?${queryState.toString()}`;
+                  }
+                }}
                 sx={{
                   "--color": "var(--theme-green)",
                   "--contrast": "#fefeff",

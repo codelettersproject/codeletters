@@ -33,6 +33,7 @@ export interface QueryState<T extends object> {
   remove<K extends keyof T>(key: LooseAutocomplete<K> | LooseAutocomplete<K>[]): void;
   update(query: LooseObjectKeys<T, string | string[]>): void;
   contains<K extends keyof T>(key: LooseAutocomplete<K>): boolean;
+  toString(): string;
   refresh(): void;
   clear(): void;
 }
@@ -87,6 +88,21 @@ export function useQueryState<T extends object>(): QueryState<T> {
 
   const contains = (key: string) => {
     return key in query && !!query[key];
+  };
+
+  const toString = () => {
+    const params = new URLSearchParams();
+
+    for(const prop in query) {
+      if(!query[prop])
+        continue;
+
+      for(const v of Array.isArray(query[prop]) ? query[prop] : [query[prop]]) {
+        params.set(prop, v);
+      }
+    }
+
+    return params.toString();
   };
 
   function cast(key: string, type: EnumMembers<typeof PARSE_AS>): any {
@@ -146,6 +162,7 @@ export function useQueryState<T extends object>(): QueryState<T> {
     update,
     clear,
     contains,
+    toString,
   } as const) as any;
 }
 

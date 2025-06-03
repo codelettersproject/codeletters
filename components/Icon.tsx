@@ -64,6 +64,7 @@ const UNICODE_SET = {
   pets: "\"\\e91d\"",
   "water-drop": "\"\\e798\"",
   book: "\"\\ea19\"",
+  save: "\"\\e161\"",
 };
 
 const UNICODE_ICON_ALIAS = {};

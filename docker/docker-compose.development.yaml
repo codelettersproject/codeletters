@@ -1,0 +1,23 @@
+version: '3'
+services:
+  pgsql:
+    image: postgres:16.8-alpine
+    container_name: pgsql
+    env_file:
+      - ./psql.env
+    restart: unless-stopped
+    ports:
+      - "54320:5432"
+    volumes:
+      - ./var/psql/data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:8.6
+    container_name: pgadmin
+    ports:
+      - "5018:80"
+    volumes:
+      - ./var/pgadmin:/var/lib/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=mail@example.com
+      - PGADMIN_DEFAULT_PASSWORD=password

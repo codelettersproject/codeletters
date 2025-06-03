@@ -8,3 +8,5 @@ export type Dict<T> = {
 
 
 export type LooseAutocomplete<T extends string | number | symbol> = T | Omit<string, T>;
+
+export type JsonValue = string | number | boolean | null;

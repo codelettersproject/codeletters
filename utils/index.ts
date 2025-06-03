@@ -183,3 +183,30 @@ export function cdn(path: string): string {
 export function capitalize<T extends string>(value: T): Capitalize<T> {
   return (value.charAt(0).toUpperCase() + value.slice(1)) as Capitalize<T>;
 }
+
+
+export function isBase64(str: unknown): str is string {
+  if(!str || typeof str !== "string") return false;
+
+  try {
+    // eslint-disable-next-line no-useless-escape
+    const base64Regex = /^(?:[A-Za-z0-9+\/]{4})*?(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
+    return (str.length % 4 === 0 && base64Regex.test(str)) || btoa(atob(str)) === str;
+  } catch {
+    return false;
+  }
+}
+
+
+export function isNumber(arg: any): boolean {
+  if(typeof arg === "number")
+    return true;
+
+  if(typeof arg !== "string")
+    return false;
+
+  if((/^0x[0-9a-f]+$/i).test(arg))
+    return true;
+
+  return (/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/).test(arg);
+}

@@ -51,7 +51,7 @@ const Card = (p: CardProps) => {
         "& > .card-title": {
           display: "inline-block",
           width: "100%",
-          letterSpacing: "calc(var(--default-letter-spacing) / 3)",
+          letterSpacing: 0,
           fontSize: "1.75rem",
           fontWeight: 600,
           textAlign: "center",
@@ -83,7 +83,7 @@ const Card = (p: CardProps) => {
     >
       {
         p.title != null && typeof p.title !== "undefined" ? (
-          <Typography.Title className="card-title">
+          <Typography.Title className="card-title font-jet-mono">
             {p.title !== "__$__default" ? p.title : defaultTitles[p.cc ?? "funny"]}
           </Typography.Title>
         ) : null
@@ -101,11 +101,13 @@ const Card = (p: CardProps) => {
         ) : null
       }
       <Box
+        className="font-jet-mono"
         sx={{
           width: "100%",
           maxHeight: "27rem",
           overflow: "auto",
           marginTop: "2.675rem",
+          lineHeight: "1.5",
 
           "& h4": {
             fontSize: "1.3rem",
@@ -115,11 +117,11 @@ const Card = (p: CardProps) => {
           "& :where(em, strong, p, a)": {
             fontSize: "0.975rem",
             fontWeight: "normal",
-            letterSpacing: "var(--default-letter-spacing)",
+            letterSpacing: "calc(var(--default-letter-spacing) / 4)",
           },
 
           "& strong": {
-            fontWeight: 600,
+            fontWeight: 800,
           },
 
           "& a": {

@@ -83,7 +83,7 @@
   }
 }
 
-.font-jet-mono {
+.font-jet-mono, .font-jet-mono *:not(i, .icon) {
   font-family: "JetBrains Mono", monospace;
 }
 
