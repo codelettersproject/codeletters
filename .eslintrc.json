@@ -45,6 +45,7 @@
       2,
       "always-multiline"
     ],
+    "no-extra-semi": "off",
     "indent": [
       "error",
       2,
@@ -58,7 +59,7 @@
     ],
     "quotes": [
       "error",
-      "single"
+      "double"
     ],
     "semi": [
       "error",

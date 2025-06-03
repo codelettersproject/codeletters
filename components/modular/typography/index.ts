@@ -1,5 +1,5 @@
-import TypographyText from './TypographyText';
-import TypographyTitle from './TypographyTitle';
+import TypographyText from "./TypographyText";
+import TypographyTitle from "./TypographyTitle";
 
 
 const Typography = {

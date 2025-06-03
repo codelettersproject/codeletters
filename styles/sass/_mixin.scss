@@ -2,6 +2,13 @@
 @custom-media --viewport-small (max-width: 680px);
 
 
+@mixin small-screen-breakpoint {
+  @media only screen and (max-width: 61.25rem) {
+    @content;
+  }
+}
+
+
 @mixin flex {
   display: -webkit-box;
   display: -webkit-flex;
@@ -21,6 +28,13 @@
   -webkit-justify-content: $pos;
   -webkit-box-pack: $pos;
   -ms-flex-pack: $pos;
+}
+
+
+@mixin transition ($c) {
+  transition: $c;
+  -webkit-transition: $c;
+  -moz-transition: $c;
 }
 
 

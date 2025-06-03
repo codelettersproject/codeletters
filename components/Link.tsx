@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import React, { AnchorHTMLAttributes, memo } from 'react';
+import { useRouter } from "next/router";
+import React, { AnchorHTMLAttributes, memo } from "react";
 
-import { cn } from '@/utils';
+import { cn } from "@/utils";
 
 
 export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -19,11 +19,11 @@ const Link = ({
   return (
     <a
       {...props}
-      role={props.role || 'link'}
-      rel={props.rel || 'noopener noreferrer'}
-      className={cn('anchor-link', props.className)}
+      role={props.role || "link"}
+      rel={props.rel || "noopener noreferrer"}
+      className={cn("anchor-link", props.className)}
       onClick={event => {
-        if(!soft || !props.href || props.href.startsWith('#'))
+        if(!soft || !props.href || props.href.startsWith("#"))
           return;
 
         event.preventDefault();

@@ -1,12 +1,16 @@
-import React from 'react';
+import React from "react";
 
-import { Wrapper } from '@/components';
+import { Container, Wrapper } from "@/components";
 
 
 
 const Dashboard = () => {
   return (
-    <Wrapper></Wrapper>
+    <Wrapper m={{ dt: "Página Inicial | Code Letters" }}>
+      <Container size="sx">
+        dashboard
+      </Container>
+    </Wrapper>
   );
 };
 
