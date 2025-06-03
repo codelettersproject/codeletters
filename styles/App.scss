@@ -1,0 +1,23 @@
+@use './sass/' as *;
+
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100dvh;
+  overflow: hidden;
+  z-index: 380;
+  background-color: var(--box-bg);
+  border-right: 1px solid var(--border-color);
+
+  & > .sidebar__logo {
+    @include flex();
+    @include flex-align(center);
+    @include flex-justify(center);
+
+    width: 100%;
+    padding: 1rem;
+  }
+}

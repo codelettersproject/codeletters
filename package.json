@@ -1,0 +1,38 @@
+{
+  "name": "codeletters",
+  "version": "0.1.0",
+  "private": true,
+  "license": "CC0-1.0",
+  "author": {
+    "name": "Code Letters' Team"
+  },
+  "scripts": {
+    "dev": "clear && next telemetry disable && NEXT_TELEMETRY_DISABLED=1 next dev -p 4001",
+    "build": "tsc --noEmit && next telemetry disable && NEXT_TELEMETRY_DISABLED=1 next build",
+    "start": "tsc --noEmit && next telemetry disable && NEXT_TELEMETRY_DISABLED=1 next start",
+    "lint": "next telemetry disable && NEXT_TELEMETRY_DISABLED=1 next lint",
+    "spec": "clear && tsc --noEmit && jest --verbose --runInBand",
+    "spec:no-check": "clear && jest --verbose --runInBand"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.1.1",
+    "next": "15.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.5",
+    "sass": "^1.89.1",
+    "typesdk": "^2.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "eslint": "8.57.0",
+    "eslint-plugin-react": "^7.37.3",
+    "typescript": "^5"
+  }
+}

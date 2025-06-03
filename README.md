@@ -52,3 +52,8 @@
 ## Licença
 
   Este repositório está licenciado pela [Creative Commons 1.0](./LICENSE).
+
+
+## Suporte o Projeto
+
+  Se você gostou do projeto, deixe uma ⭐️ no GitHub ou compartilhe-o com seus amigos.
