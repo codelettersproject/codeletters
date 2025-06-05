@@ -16,10 +16,9 @@ interface QueryStringState {
 }
 
 
-const SignUp = () => {
+const Login = () => {
   const refs = {
-    username: useRef<HTMLInputElement>(null),
-    email: useRef<HTMLInputElement>(null),
+    id: useRef<HTMLInputElement>(null),
     password: useRef<HTMLInputElement>(null),
   };
 
@@ -28,59 +27,47 @@ const SignUp = () => {
   const [state, setState] = useState({
     isLoading: false,
 
-    usernameError: null as string | null,
-    emailError: null as string | null,
+    idError: null as string | null,
     passwordError: null as string | null,
 
-    hasUsername: false,
-    hasEmail: false,
+    hasId: false,
     hasPassword: false,
   });
 
-  const disabled = !(state.hasUsername && state.hasEmail && state.hasPassword);
+  const disabled = !(state.hasId && state.hasPassword);
 
   useRender(() => {
-    refs.username.current?.focus();
+    refs.id.current?.focus();
   });
 
 
-  async function signUpRequest(event?: React.FormEvent<HTMLFormElement>) {
+  async function signInRequest(event?: React.FormEvent<HTMLFormElement>) {
     event?.preventDefault();
     event?.stopPropagation();
 
     if(state.isLoading)
       return;
 
-    const displayName = refs.username.current?.value.trim();
-    const emailAddress = refs.email.current?.value.trim();
+    const identifier = refs.id.current?.value.trim();
     const password = refs.password.current?.value.trim();
 
-    if(!displayName) {
+    if(!identifier) {
       setState(prev => ({
         ...prev,
-        usernameError: "Você precisa informar um nome de usuário",
+        idError: "Você precisa informar um nome de usuário ou e-mail",
       }));
 
-      return refs.username.current?.focus();
-    }
-
-    if(!emailAddress) {
-      setState(prev => ({
-        ...prev,
-        emailError: "Você precisa informar um e-mail",
-      }));
-
-      delayed(() => refs.email.current?.focus(), 10);
+      delayed(() => refs.id.current?.focus(), 10);
       return;
     }
 
-    if(!validateEmail(emailAddress)) {
+    if(identifier.includes("@") && !validateEmail(identifier)) {
       setState(prev => ({
         ...prev,
-        emailError: "Você precisa informar um e-mail válido",
+        idError: "Você precisa informar um e-mail válido",
       }));
 
-      delayed(() => refs.email.current?.focus(), 10);
+      delayed(() => refs.id.current?.focus(), 10);
       return;
     }
 
@@ -99,11 +86,10 @@ const SignUp = () => {
     try {
       const body = await transporter.createToken({
         password,
-        displayName,
-        emailAddress,
+        identifier,
       });
 
-      const res = await api.post("/api/v1/auth/signup/ep", {
+      const res = await api.post("/api/v1/auth/signin/ep", {
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
           Accept: "application/json,application/octet-stream",
@@ -111,7 +97,7 @@ const SignUp = () => {
         body: JSON.stringify(body),
       });
 
-      if(res.status !== 201) {
+      if(res.status !== 200) {
         const { msg, kind } = await toastify("signup:http", res);
         toast[kind](msg);
 
@@ -120,7 +106,7 @@ const SignUp = () => {
 
       window.location.href = `/api/v1/rc?continue=${encodeURIComponent(decodeURIComponent(query.continue ?? "/dashboard"))}`;
     } catch (err: any) {
-      console.error("AUTH:SIGN_UP", err);
+      console.error("AUTH:SIGN_IN", err);
       toast.error("Algo não deu certo. Tente novamente");
     } finally {
       delayed(() => setState(prev => ({ ...prev, isLoading: false })));
@@ -153,6 +139,11 @@ const SignUp = () => {
             fontStyle: "italic",
             fontWeight: 600,
           },
+
+          "&:last-of-type": {
+            fontSize: "1.175rem",
+            marginTop: "0.425rem",
+          },
         },
 
         "& > form": {
@@ -166,50 +157,30 @@ const SignUp = () => {
       }}
     >
       <Typography.Title>
-        Crie sua conta na <span>CODE</span> <span className="font-jet-mono">Letters</span>
+        <span>CODE</span> <span className="font-jet-mono">Letters</span>
+      </Typography.Title>
+      <Typography.Title>
+        Bem-vindo de volta!
       </Typography.Title>
       <form
         noValidate
-        onSubmit={signUpRequest}
+        onSubmit={signInRequest}
       >
         <FormGroup
-          ref={refs.username}
+          ref={refs.id}
           type="text"
           inputMode="text"
           autoComplete="off"
           spellCheck="false"
           icon="account"
-          label="Nome de usuário"
+          label="Nome de usuário ou e-mail"
           disabled={state.isLoading}
-          helpText={state.usernameError}
+          helpText={state.idError}
           onChange={({ target }) => {
             setState(prev => ({
               ...prev,
-              usernameError: null,
-              hasUsername: target.value.trim().length > 0,
-            }));
-          }}
-          onKeyUp={({ key }) => {
-            if(key === "Enter") {
-              refs.email.current?.focus();
-            }
-          }}
-        />
-        <FormGroup
-          ref={refs.email}
-          type="text"
-          inputMode="email"
-          autoComplete="off"
-          spellCheck="false"
-          icon="mail"
-          label="E-mail"
-          disabled={state.isLoading}
-          helpText={state.emailError}
-          onChange={({ target }) => {
-            setState(prev => ({
-              ...prev,
-              emailError: null,
-              hasEmail: target.value.trim().length > 4,
+              idError: null,
+              hasId: target.value.trim().length > 0,
             }));
           }}
           onKeyUp={({ key }) => {
@@ -237,14 +208,14 @@ const SignUp = () => {
           }}
           onKeyUp={({ key }) => {
             if(key === "Enter") {
-              signUpRequest(void 0);
+              signInRequest(void 0);
             }
           }}
         />
         <Box
           sx={{
             width: "100%",
-                    
+            
             "& > a": {
               marginLeft: "auto",
               float: "right",
@@ -252,10 +223,10 @@ const SignUp = () => {
           }}
         >
           <Link
-            href={`/ServiceAuth/0/login?${queryState.toString()}`}
+            href={`/ServiceAuth/0/signup?${queryState.toString()}`}
             target="_self"
           >
-            <Typography.Text>Já tem uma conta?</Typography.Text>
+            <Typography.Text>Não tem uma conta?</Typography.Text>
           </Link>
         </Box>
         {
@@ -318,7 +289,7 @@ const SignUp = () => {
               }}
             >
               <Typography.Text>
-                Criar conta
+                Entrar
               </Typography.Text>
             </Button>
           )
@@ -328,4 +299,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

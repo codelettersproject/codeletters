@@ -25,6 +25,21 @@ const nextConfig = {
         destination: "/ServiceAuth/0/signup",
         permanent: true,
       },
+      {
+        source: "/signin",
+        destination: "/ServiceAuth/0/login",
+        permanent: true,
+      },
+      {
+        source: "/login",
+        destination: "/ServiceAuth/0/login",
+        permanent: true,
+      },
+      {
+        source: "/entrar",
+        destination: "/ServiceAuth/0/login",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

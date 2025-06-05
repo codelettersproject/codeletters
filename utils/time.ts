@@ -1,3 +1,95 @@
+export type RelativeTime = `${number}${"s" | "m" | "h" | "d" | "w" | "M" | "y"}`;
+
+export const relativeTimePattern = /^\d+(s|m|h|d|w|M|y)$/;
+
+
+/**
+ * Parses a relative time string (e.g., "5m", "2h") and returns the Date object from now.
+ * @param {RelativeTime} relativeTime - The relative time string.
+ * @returns {Date} The Date object.
+ */
+export function parseRelativeTime(relativeTime: RelativeTime): Date {
+  if(!relativeTimePattern.test(relativeTime)) {
+    throw new TypeError("Invalid relative time format");
+  }
+    
+  const value = parseInt(relativeTime.slice(0, -1), 10);
+  const unit = relativeTime.slice(-1);
+    
+  const date = new Date();
+
+  switch(unit) {
+    case "s":
+      date.setSeconds(date.getSeconds() + value);
+      break;
+    case "m":
+      date.setMinutes(date.getMinutes() + value);
+      break;
+    case "h":
+      date.setHours(date.getHours() + value);
+      break;
+    case "d":
+      date.setDate(date.getDate() + value);
+      break;
+    case "w":
+      date.setDate(date.getDate() + value * 7);
+      break;
+    case "M":
+      date.setMonth(date.getMonth() + value);
+      break;
+    case "y":
+      date.setFullYear(date.getFullYear() + value);
+      break;
+  }
+    
+  return date;
+}
+
+
+/**
+ * Parses a relative time string and returns the Date object from a given epoch.
+ * @param {RelativeTime} relativeTime - The relative time string.
+ * @param {number} epoch - The reference timestamp in milliseconds.
+ * @returns {Date} The computed Date object.
+ */
+export function parseRelativeTimeFromEpoch(relativeTime: RelativeTime, epoch: number): Date {
+  if (!relativeTimePattern.test(relativeTime)) {
+    throw new TypeError("Invalid relative time format");
+  }
+    
+  const value = parseInt(relativeTime.slice(0, -1), 10);
+  const unit = relativeTime.slice(-1);
+    
+  const date = new Date(epoch);
+
+  switch(unit) {
+    case "s":
+      date.setSeconds(date.getSeconds() + value);
+      break;
+    case "m":
+      date.setMinutes(date.getMinutes() + value);
+      break;
+    case "h":
+      date.setHours(date.getHours() + value);
+      break;
+    case "d":
+      date.setDate(date.getDate() + value);
+      break;
+    case "w":
+      date.setDate(date.getDate() + value * 7);
+      break;
+    case "M":
+      date.setMonth(date.getMonth() + value);
+      break;
+    case "y":
+      date.setFullYear(date.getFullYear() + value);
+      break;
+  }
+    
+  return date;
+}
+
+
 export function timeBasedGreeting(language?: Intl.LocalesArgument): string {
   const hours = new Date(Date.now()).getHours();
 

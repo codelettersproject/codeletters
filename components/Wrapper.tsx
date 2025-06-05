@@ -1,11 +1,18 @@
 import Head from "next/head";
-import React, { memo } from "react";
+import { Box } from "@mui/material";
+import { useDispatch } from "react-redux";
+import React, { memo, useState } from "react";
 
 import Icon from "./Icon";
+import Loader from "./Loader";
 import Button from "./Button";
 import Sidebar from "./Sidebar";
+import { useRender } from "@/hooks";
 import { Typography } from "./modular";
-import { cn, useIsMobile } from "@/utils";
+import { useAuth } from "@/context/auth";
+import { flexCenter } from "@/styles/theme";
+import { cn, delayed, useIsMobile } from "@/utils";
+import { setIsSidebarOpen, useAppState } from "@/redux/features/appState";
 
 
 export type WrapperProps = {
@@ -15,7 +22,44 @@ export type WrapperProps = {
 }
 
 const Wrapper = (p: WrapperProps) => {
+  const dispatch = useDispatch();
   const isMobile = useIsMobile();
+
+  const { isAuthenticated } = useAuth();
+  const { isSidebarOpen } = useAppState();
+
+  const [state, setState] = useState({
+    isMounted: false,
+  });
+
+  useRender(async () => {
+    const isAuth = await isAuthenticated();
+
+    if(!isAuth) {
+      window.location.href = `/ServiceAuth/0/login?continue=${encodeURIComponent(window.location.href)}`;
+      return;
+    }
+
+    delayed(() => setState(prev => ({ ...prev, isMounted: true })), 375);
+  });
+
+  if(!state.isMounted) return (
+    <Box
+      sx={{
+        width: "100%",
+        height: "100dvh",
+        ...flexCenter,
+
+        "& > .loader .icon": {
+          fontSize: "22px",
+          fontWeight: 300,
+          color: "var(--theme-color)",
+        },
+      }}
+    >
+      <Loader active={!state.isMounted} fill />
+    </Box>
+  );
 
   return (
     <>
@@ -37,6 +81,9 @@ const Wrapper = (p: WrapperProps) => {
           isMobile ? (
             <Button
               tabIndex={0}
+              onClick={() => {
+                dispatch(setIsSidebarOpen(!isSidebarOpen));
+              }}
               sx={{
                 position: "absolute",
                 top: "1.45rem",
@@ -73,7 +120,7 @@ const Wrapper = (p: WrapperProps) => {
                 },
               }}
             >
-              <Icon icon="menu-open" />
+              <Icon icon={`menu-${isSidebarOpen ? "close" : "open"}`} />
               <Typography.Text>Sidebar</Typography.Text>
             </Button>
           ) : null

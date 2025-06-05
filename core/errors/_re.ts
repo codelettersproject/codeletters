@@ -1,3 +1,5 @@
+import { IOStream } from "ndforge";
+
 import HttpError from "./http";
 import { ivhs } from "@/utils/http";
 import { jsonSafeStringify } from "@/lib/safe-json";
@@ -38,6 +40,12 @@ export async function re(c: any, rq: ApiRequest, rs: ApiResponse): Promise<void>
       delete o.context;
       o.message = c.unsafeContextMessage ?? "[REDACTED]";
     }
+  } else if(c instanceof IOStream.Exception.NotImplemented) {
+    o.code = "ERR_NOT_IMPLEMENTED";
+    o.message = c.message;
+    o.context = null;
+
+    s = 501;
   }
 
   if((o as any).message.toUpperCase().includes("ECONNREFUSED")) {

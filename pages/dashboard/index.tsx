@@ -2,18 +2,21 @@ import { Box } from "@mui/material";
 import React, { useState } from "react";
 import { parseRelativeTimeString } from "typesdk/datetime";
 
+import { useAuth } from "@/context/auth";
 import { timeBasedGreeting } from "@/utils";
 import { Container, Envelope, Icon, Typography, Wrapper } from "@/components";
 
 
 
 const Dashboard = () => {
+  const { user } = useAuth();
+
   const [state, setState] = useState({
     hideWelcomeMessage: false,
-    totalCards: 15,
-    sharedCards: 7,
+    totalCards: 0,
+    sharedCards: 0,
     reactions: 0,
-    views: 184,
+    views: 0,
   });
 
   function hideWelcomeMessage() {
@@ -75,7 +78,7 @@ const Dashboard = () => {
               <section>
                 <Icon icon="info" />
                 <Typography.Text>
-                  {timeBasedGreeting("pt-br")}, {"Jane Doe"}! Pronto para criar novas mensagens?
+                  {timeBasedGreeting("pt-br")}, {user?.displayName}! Pronto para criar novas mensagens?
                 </Typography.Text>
               </section>
               <Icon

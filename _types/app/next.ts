@@ -1,8 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import AuthResultDTO from "@/modules/auth/dtos/AuthResultDTO";
+
 
 export interface RequestContext {
   [key: string]: unknown;
+  readonly session?: AuthResultDTO["session"];
 }
 
 export interface RequestInet {

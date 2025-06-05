@@ -143,6 +143,35 @@
   }
 }
 
+.extends__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  overflow: -moz-hidden-unscrollable;
+  z-index: 280;
+  background-color: rgba(0, 0, 0, .5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity .3s ease-in-out;
+  -webkit-transition: opacity .3s ease-in-out;
+  -moz-transition: opacity .3s ease-in-out;
+
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 280;
+  }
+
+  &.blur-offset-1 {
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+  }
+}
+
 
 .main-content-anchor {
   position: fixed;

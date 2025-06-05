@@ -1,10 +1,10 @@
 import Service from "@/core/service";
-import SignUpResultDTO from "@/modules/auth/dtos/SignUpResultDTO";
+import AuthResultDTO from "@/modules/auth/dtos/AuthResultDTO";
 import SignUpRequestDTO from "@/modules/auth/dtos/SignUpRequestDTO";
 
 
-abstract class SignUpController implements Service<never, SignUpResultDTO> {
-  public abstract execute(): Promise<SignUpResultDTO>; 
+abstract class SignUpController implements Service<never, AuthResultDTO> {
+  public abstract execute(): Promise<AuthResultDTO>; 
   protected abstract _getCredentials(): SignUpRequestDTO | Promise<SignUpRequestDTO>;
 }
 

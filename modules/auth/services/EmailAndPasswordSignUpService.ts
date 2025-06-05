@@ -1,10 +1,14 @@
 import { t } from "ndforge";
 
 import User from "@/models/users";
+import { redact } from "@/lib/crypto";
+import { isProduction } from "@/utils";
+import { Cookie } from "@/lib/cookies";
+import Session from "@/models/sessions";
 import { transporter } from "@/lib/http";
 import { HttpError } from "@/core/errors";
 import type { ApiRequest, ApiResponse } from "@/_types";
-import SignUpResultDTO from "@/modules/auth/dtos/SignUpResultDTO";
+import AuthResultDTO from "@/modules/auth/dtos/AuthResultDTO";
 import SignUpRequestDTO from "@/modules/auth/dtos/SignUpRequestDTO";
 import SignUpController from "@/modules/auth/iface/SignUpController";
 
@@ -23,7 +27,7 @@ class EmailAndPasswordSignUpService extends SignUpController {
     return this._rq;
   }
 
-  public async execute(): Promise<SignUpResultDTO> {
+  public async execute(): Promise<AuthResultDTO> {
     const { emailAddress, password, displayName, kind } = this._getCredentials();
 
     if(kind !== "e/p" || !password) {
@@ -53,9 +57,18 @@ class EmailAndPasswordSignUpService extends SignUpController {
       emailAddress,
       password: password.normalize(),
     });
+    
+    const session = await Session.create({
+      kind: "authx",
+      expires: "15m",
+      userId: usr.userId,
+      headers: { aud: "usr" },
+      payload: { role: "standard", meta: usr.metadata },
+    });
 
     return {
       target: usr.toSafeDocument(),
+      session: session.toRedactedDocument(),
     };
   }
 
@@ -68,14 +81,23 @@ class EmailAndPasswordSignUpService extends SignUpController {
 
     const { displayName, emailAddress, password } = requestSchema.parse(request.db);
 
-    const { target } = await (new EmailAndPasswordSignUpService({
+    const { target, session } = await (new EmailAndPasswordSignUpService({
       displayName,
       emailAddress,
       password,
       kind: "e/p",
     })).execute();
 
+    const cookie = new Cookie(redact(session.sessionId, "base64url"), {
+      httpOnly: true,
+      path: "/",
+      sameSite: "Strict",
+      secure: isProduction(),
+    }).setKey("_CSID");
+
     const body = await transporter.encryptBuffer({ target });
+
+    response.setHeader("Set-Cookie", [cookie.toString(true)]);
 
     response.status(201).send(body);
     response.end();

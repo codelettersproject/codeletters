@@ -1,18 +1,26 @@
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 import { ssrSafeWindow } from "typesdk/ssr";
 import React, { memo, useEffect, useState } from "react";
 
 import Logo from "./Logo";
 import Icon from "./Icon";
-import { cn } from "@/utils";
 import Button from "./Button";
 import { Typography } from "./modular";
+import { useAuth } from "@/context/auth";
+import { cn, useIsMobile } from "@/utils";
 import { clampLine } from "@/styles/theme";
 import type { IMenuEntry } from "@/_types";
 import Dropdown, { DropdownItem } from "./Dropdown";
+import { setIsSidebarOpen, useAppState } from "@/redux/features/appState";
 
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const isMobile = useIsMobile();
+
+  const { user } = useAuth();
+  const { isSidebarOpen } = useAppState();
   const { asPath, push: navigate } = useRouter();
 
   const [state, setState] = useState({
@@ -58,7 +66,7 @@ const Sidebar = () => {
 
 
   useEffect(() => {
-    // dispatch(setIsDashboardSidebarActive(false));
+    dispatch(setIsSidebarOpen(false));
 
     setState(prev => {
       const activeIndex = navMenu.findIndex(item => {
@@ -91,7 +99,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="sidebar">
+      <div className={cn("sidebar", { expanded: isSidebarOpen && isMobile })}>
         <div className="sidebar__logo">
           <Logo />
         </div>
@@ -169,10 +177,10 @@ const Sidebar = () => {
                 <Icon icon="person" /> {/* TODO: REPLACE IT WITH AN IMAGE!! */}
                 <section className="flex-stack">
                   <Typography.Text>
-                    User.Name
+                    {user?.displayName}
                   </Typography.Text>
                   <Typography.Text component="p">
-                    User.Email
+                    {user?.emailAddress}
                   </Typography.Text>
                 </section>
               </div>
@@ -262,7 +270,10 @@ const Sidebar = () => {
           </Dropdown>
         </div>
       </div>
-      <div className="sidebar-overlay extends__overlay blur-offset-1"></div>
+      <div
+        className={cn("sidebar-overlay", "extends__overlay", "blur-offset-1", { active: isSidebarOpen })}
+        onClick={() => dispatch(setIsSidebarOpen(false))}
+      ></div>
     </>
   );
 };

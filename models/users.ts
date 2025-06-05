@@ -135,11 +135,31 @@ class User extends Entity<UserProps> {
   }
 
   public doc(): UserDocument {
-    // 
+    return Object.freeze<UserDocument>({
+      createdAt: this._props.createdAt!,
+      displayName: this._props.displayName,
+      emailAddress: this._props.emailAddress,
+      metadata: this.metadata,
+      password: this._props.password,
+      salt: this._props.salt!,
+      updatedAt: this._props.updatedAt!,
+      userId: this._id,
+      deletedAt: this._props.deletedAt,
+      nukedAt: this._props.nukedAt,
+    });
   }
 
   public toSafeDocument(): SafeUserDocument {
-    // 
+    return Object.freeze<SafeUserDocument>({
+      createdAt: this._props.createdAt!,
+      displayName: this._props.displayName,
+      emailAddress: this._props.emailAddress,
+      metadata: this.metadata,
+      updatedAt: this._props.updatedAt!,
+      userId: this._id,
+      deletedAt: this._props.deletedAt,
+      nukedAt: this._props.nukedAt,
+    });
   }
 
   public setMetadata<K extends keyof PresetUserMetadata>(
@@ -186,7 +206,7 @@ class User extends Entity<UserProps> {
     this._changed = true;
   }
 
-  public async update(): Promise<void> {
+  public async save(): Promise<void> {
     if(!this._changed)
       return;
 

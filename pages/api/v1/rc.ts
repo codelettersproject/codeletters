@@ -1,9 +1,14 @@
 import r from "@/core/middlewares/r";
-import { HttpError } from "@/core/errors";
+import type { ApiRequest, ApiResponse } from "@/_types";
 
 
-async function handle() {
-  throw new HttpError("This implementation is missing", null, null, { statusCode: 501 });
+async function handle(rq: ApiRequest, rs: ApiResponse) {
+  const dest = decodeURIComponent(String(rq.query.continue ?? "/dashboard"));
+
+  rs.writeHead(302, {
+    Location: dest,
+    Connection: "close",
+  }).end();
 }
 
 

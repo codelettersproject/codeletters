@@ -211,3 +211,10 @@ export function isNumber(arg: any): boolean {
 
   return (/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/).test(arg);
 }
+
+
+export function parseBufferEncoding(payload: Buffer, encoding?: unknown): Buffer | string {
+  return typeof encoding === "string" && Buffer.isEncoding(encoding) ?
+    payload.toString(encoding) :
+    payload;
+}
