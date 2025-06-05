@@ -251,6 +251,9 @@ const Sidebar = () => {
             <DropdownItem
               icon={(<Icon icon="settings" style={{ marginTop: "1.5px" }} />)}
               label="Configurações"
+              action={() => {
+                navigate("/dashboard/settings");
+              }}
             />
             <DropdownItem
               icon={(<Icon icon="logout" style={{ marginTop: "1.5px" }} />)}

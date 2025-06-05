@@ -8,6 +8,10 @@ class HttpError extends Error {
     public readonly context?: any // eslint-disable-line comma-dangle
   ) {
     super(message ?? "");
+
+    if(typeof code === "undefined" || code == null) {
+      this.code = -1000;
+    }
   }
 
   public showUnsafeContext(): this {
@@ -26,8 +30,8 @@ class HttpError extends Error {
 
   public toJSON(): object {
     return {
-      message: this.unsafeContextMessage,
       code: this.code,
+      message: this.unsafeContextMessage,
       context: this._hideContext ? this.context?.safeContext : this.context,
     };
   }

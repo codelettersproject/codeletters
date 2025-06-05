@@ -15,6 +15,7 @@ export type LogoProps = {
 const Logo = (p: LogoProps) => {
   return (
     <Box
+      className="logo"
       sx={{
         width: p.style?.width ?? "fit-content",
 
@@ -30,9 +31,10 @@ const Logo = (p: LogoProps) => {
           },
 
           "&:last-of-type": {
-            color: "var(--text-color)",
+            color: "var(--text-secondary)",
             marginLeft: "0.5rem",
             textTransform: "capitalize",
+            letterSpacing: 0,
           },
         },
       }}

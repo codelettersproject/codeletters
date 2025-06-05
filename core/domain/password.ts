@@ -95,10 +95,6 @@ class Password {
 
   public static create(value: BufferLike, hashed: boolean, salt?: BufferLike | null): Either<Exception, Password> {
     try {
-      if(isBase64(value)) {
-        value = Buffer.from(value, "base64");
-      }
-
       if(!Password.validate(chunkToBuffer(value).toString("utf-8"))) {
         throw new Exception("The provided password is not valid");
       }

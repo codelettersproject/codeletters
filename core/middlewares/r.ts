@@ -1,5 +1,9 @@
-import { re } from "../errors";
+import { chunkToBuffer } from "ndforge";
+
 import { uuidv7 } from "@/lib/uid";
+import { transporter } from "@/lib/http";
+import { HttpError, re } from "../errors";
+import { jsonSafeParser } from "@/lib/safe-json";
 import type { ApiRequest, Method, RequestHandler, RequestInet } from "@/_types";
 
 
@@ -14,6 +18,48 @@ function r(ms: Method | readonly Method[], c: RequestHandler): RequestHandler {
       if(!((Array.isArray(ms) ? ms : [ms]) as string[]).includes(m)) {
         rs.writeHead(405, { Connection: "close" }).end();
         return;
+      }
+
+      if(!["get", "options"].includes(rq.method?.toLowerCase() ?? "get")) {
+        if(rq.headers["content-type"]?.startsWith("application/json")) {
+          try {
+            const db = await transporter.parseToken(typeof rq.body === "string" ? JSON.parse(rq.body) : rq.body);
+            ;(rq as any).db = db;
+          } catch (err) {
+            const jsonParsed = jsonSafeParser(rq.body);
+
+            if(jsonParsed.isRight()) {
+              rq.body = jsonParsed.value;
+              (rq as any).db = { __$raw: jsonParsed.value };
+            }
+
+            console.error(err, jsonParsed.isLeft() ? jsonParsed.value : null);
+          }
+        } else if(rq.headers["content-type"]?.startsWith("application/octet-stream")) {
+          try {
+            if(typeof rq.body === "string") {
+              console.warn("[WARN] binary data in request like to be string encoded... Trying to parse as 'latin1'");
+              rq.body = Buffer.from(rq.body, "latin1");
+            } else if(!(rq.body instanceof Uint8Array)) {
+              if(!rq.readable) {
+                throw new HttpError("The request stream is not readable");
+              }
+
+              const chunks: Buffer[] = [];
+
+              for await (const chunk of rq) {
+                chunks.push(chunkToBuffer(chunk));
+              }
+
+              rq.body = Buffer.concat(chunks);
+            }
+
+            const db = await transporter.decryptBuffer(rq.body);
+            ;(rq as any).db = db;
+          } catch (err) {
+            console.error(err);
+          }
+        }
       }
       
       await c(rq, rs);

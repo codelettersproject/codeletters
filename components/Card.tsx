@@ -7,12 +7,13 @@ import { Typography } from "./modular";
 import { flexCenter } from "@/styles/theme";
 import cardPalette from "@/resources/static/card-palette";
 import SimpleMarkdownParser from "./SimpleMarkdownParser";
+import Link from "./Link";
 
 
 const defaultTitles: Record<string, string> = {
   funny: "Cartão Engraçado 🤪",
   professional: "Cartão Profissional 🤗",
-  invitation: "Cartão de Convite 📅",
+  invitation: "Convite 📅",
   romantic: "Cartão Romântico ❤️",
 };
 
@@ -21,6 +22,7 @@ export type CardProps = {
   b?: boolean;
   c?: string;
   cn?: string;
+  hb?: boolean;
   bgl?: boolean;
   bs?: boolean;
   cc?: string;
@@ -131,6 +133,24 @@ const Card = (p: CardProps) => {
       >
         <SimpleMarkdownParser content={p.c} />
       </Box>
+      {
+        p.hb ? null : (
+          <Typography.Text
+            sx={{
+              position: "absolute",
+              left: 0,
+              bottom: "-1.75rem",
+              fontSize: "0.8rem",
+              fontWeight: "normal",
+              fontStyle: "italic",
+              letterSpacing: "calc(var(--default-letter-spacing) / 2)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            Criado com <Link href="/" target="_blank">Code Letters</Link>.
+          </Typography.Text>
+        )
+      }
     </Box>
   );
 };

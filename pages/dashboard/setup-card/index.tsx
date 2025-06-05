@@ -26,6 +26,7 @@ import cardIcons from "@/resources/static/card-icons";
 const initialCardProps = {
   b: true,
   bs: true,
+  hb: false,
   bgl: true,
   i: "abc" as string | null,
   title: null as string | null,
@@ -93,7 +94,7 @@ const SetupCard = () => {
             sx={{
               width: "100%",
               height: "100%",
-              padding: "1rem 1.1rem",
+              padding: "3rem 1.5rem",
               overflow: "auto",
               ...flexCenter,
             }}
@@ -159,6 +160,10 @@ const SetupCard = () => {
                   "&:focus-visible": {
                     outlineOffset: "2px",
                     outline: "2px solid var(--accent-color)",
+                  },
+
+                  "&:active": {
+                    borderColor: "var(--theme-red)",
                   },
 
                   "@media (hover: hover)": {
@@ -245,6 +250,21 @@ const SetupCard = () => {
               </div>
               <div className="switch-row">
                 <SliderSwitch
+                  id="use-preset-bg-togge"
+                  tabIndex={0}
+                  checked={state.cardProps.bgl}
+                  color={state.cardProps.bgl ? "var(--theme-green)" : "var(--theme-red)"}
+                  buttonSize={40}
+                  onStateToggle={e => {
+                    updateCardProps("bgl", e.checked);
+                  }}
+                />
+                <label htmlFor="use-preset-bg-togge">
+                  Cor de fundo padrão
+                </label>
+              </div>
+              <div className="switch-row">
+                <SliderSwitch
                   id="border-visible-togge"
                   tabIndex={0}
                   checked={state.cardProps.b}
@@ -256,6 +276,21 @@ const SetupCard = () => {
                 />
                 <label htmlFor="border-visible-togge">
                   Borda colorida
+                </label>
+              </div>
+              <div className="switch-row">
+                <SliderSwitch
+                  id="hide-brand-togge"
+                  tabIndex={0}
+                  checked={state.cardProps.hb}
+                  color={state.cardProps.hb ? "var(--theme-green)" : "var(--theme-red)"}
+                  buttonSize={40}
+                  onStateToggle={e => {
+                    updateCardProps("hb", e.checked);
+                  }}
+                />
+                <label htmlFor="hide-brand-togge">
+                  Esconder marca d&apos;água
                 </label>
               </div>
               <div className="switch-row">

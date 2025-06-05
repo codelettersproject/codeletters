@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_digest TEXT NOT NULL,
   salt TEXT NOT NULL UNIQUE,
   nuked_at TIMESTAMP NULL,
+  deleted_at TIMESTAMP NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL
 );
@@ -24,6 +25,7 @@ CREATE TYPE card_status AS ENUM('DRAFT', 'PUBLISHED', 'BANNED');
 CREATE TABLE IF NOT EXISTS cards (
   card_id VARCHAR(128) NOT NULL UNIQUE PRIMARY KEY,
   short_code VARCHAR(32) NOT NULL UNIQUE,
+  card_name VARCHAR(64) NULL,
   owner_id VARCHAR(128) NOT NULL,
   status card_status NOT NULL DEFAULT 'DRAFT'::card_status,
   created_at TIMESTAMP NOT NULL,
@@ -38,4 +40,17 @@ CREATE TABLE IF NOT EXISTS card_chunks (
   c_hash TEXT NOT NULL,
   c_data TEXT NOT NULL,
   FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+
+CREATE TYPE card_reaction_kind AS ENUM('LIKE', 'LOVE', 'DISLIKE', 'REPORT');
+
+CREATE TABLE IF NOT EXISTS card_reactions (
+  reaction_id VARCHAR(128) NOT NULL UNIQUE PRIMARY KEY,
+  card_id VARCHAR(128) NOT NULL,
+  reactor_id VARCHAR(128) NULL,
+  reaction_kind card_reaction_kind NOT NULL,
+  created_at TIMESTAMP NOT NULL,
+  FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  FOREIGN KEY (reactor_id) REFERENCES users(user_id) ON DELETE SET NULL ON UPDATE RESTRICT
 );

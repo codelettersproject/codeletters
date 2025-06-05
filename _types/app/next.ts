@@ -24,6 +24,7 @@ export interface ApiRequest extends NextApiRequest {
   readonly rid: string;
   readonly inet: RequestInet;
   readonly ctx: RequestContext;
+  readonly db?: Record<string, unknown>;
 }
 
 export interface ApiResponse extends NextApiResponse { }

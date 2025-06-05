@@ -42,7 +42,7 @@
 
   1. Escolha uma categoria de cartão.
 
-  2. Personalize sua mensagem e selecione um template.
+  2. Personalize sua mensagem.
 
   3. Pague uma pequena taxa (R$ 5,00) para gerar um link público ou QR Code.
 

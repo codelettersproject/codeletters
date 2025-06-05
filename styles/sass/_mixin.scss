@@ -37,6 +37,13 @@
   -moz-transition: $c;
 }
 
+@mixin transform ($c) {
+  transform: $c;
+  -webkit-transform: $c;
+  -ms-transform: $c;
+  -moz-transform: $c;
+}
+
 
 @mixin hover {
   @media (hover: hover) {

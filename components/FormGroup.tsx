@@ -34,7 +34,7 @@ const FormGroup = forwardRef<HTMLInputElement, FormGroupProps>(({
   const labelSx = Object.assign({}, {
     display: "inline-block",
     fontSize: "14px",
-    fontWeight: 500,
+    fontWeight: "normal",
     letterSpacing: "calc(var(--default-letter-spacing) / 2)",
     color: color || "var(--text-color)",
     pointerEvents: "none",
@@ -81,7 +81,7 @@ const FormGroup = forwardRef<HTMLInputElement, FormGroupProps>(({
     width: "100%",
     textAlign: "right",
     fontSize: "12px",
-    fontWeight: 500,
+    fontWeight: "normal",
     letterSpacing: "calc(var(--default-letter-spacing) / 2)",
     color: "var(--theme-red)",
     marginTop: "0.2rem",

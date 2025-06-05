@@ -31,7 +31,10 @@ export type UserDocument = {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly nukedAt?: string;
+  readonly deletedAt?: string;
 };
+
+export type SafeUserDocument = Omit<UserDocument, "salt" | "password">;
 
 
 type UserProps = {
@@ -43,6 +46,7 @@ type UserProps = {
   createdAt?: string;
   updatedAt?: string;
   nukedAt?: string;
+  deletedAt?: string;
 };
 
 
@@ -118,6 +122,26 @@ class User extends Entity<UserProps> {
     return this._props.nukedAt ? new Date(this._props.nukedAt) : null;
   }
 
+  public set nukedAt(value: Date) {
+    this._props.nukedAt = value.toUTCString();
+  }
+
+  public get deletedAt(): Date | null {
+    return this._props.deletedAt ? new Date(this._props.deletedAt) : null;
+  }
+
+  public set deletedAt(value: Date) {
+    this._props.deletedAt = value.toUTCString();
+  }
+
+  public doc(): UserDocument {
+    // 
+  }
+
+  public toSafeDocument(): SafeUserDocument {
+    // 
+  }
+
   public setMetadata<K extends keyof PresetUserMetadata>(
     key: LooseAutocomplete<K>,
     value: (K extends keyof PresetUserMetadata ? PresetUserMetadata[K] : JsonValue) | null // eslint-disable-line comma-dangle
@@ -176,6 +200,8 @@ class User extends Entity<UserProps> {
             email_hash: sign(this._props.emailAddress, "hex"),
             password_digest: this._props.password,
             updated_at: new Date().toUTCString(),
+            nuked_at: this._props.nukedAt || null,
+            deleted_at: this._props.deletedAt || null,
           })
           .where({ user_id: this._id.slice(0) })
           .execute(client);
@@ -269,6 +295,39 @@ class User extends Entity<UserProps> {
           },
         ],
       });
+    } finally {
+      await database.close();
+    }
+  }
+
+  public static async find(user: string): Promise<User | null> {
+    const query = `SELECT
+      u.*,
+      array_agg(CONCAT(um.metadata_key || '|::|' || um.metadata_value)) as metadata
+    FROM
+      users u
+    LEFT JOIN
+      user_metadata um ON um.user_id = u.user_id
+    WHERE
+      u.user_id = $1::TEXT
+    OR
+      u.display_name = $1::TEXT
+    OR
+      u.email_hash = $2::TEXT
+    GROUP BY
+      u.user_id;`;
+
+    const database = await connect();
+
+    try {
+      const result = await database.query(query, {
+        values: [user, sign(user, "hex")],
+      });
+
+      if(result.rows.length !== 1)
+        return null;
+
+      return User.__new(result);
     } finally {
       await database.close();
     }

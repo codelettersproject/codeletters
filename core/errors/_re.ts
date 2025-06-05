@@ -12,7 +12,10 @@ export async function re(c: any, rq: ApiRequest, rs: ApiResponse): Promise<void>
 
     return;
   }
-
+  
+  process.stdout.write(JSON.stringify(c) + "\n");
+  console.error(c);
+  
   let s = gs(c);
 
   if(s === 500 && typeof c === "object" && "context" in c) {
@@ -33,7 +36,12 @@ export async function re(c: any, rq: ApiRequest, rs: ApiResponse): Promise<void>
 
     if(!c.context?.safeContext && c.shouldHideUnsafeContext()) {
       delete o.context;
+      o.message = c.unsafeContextMessage ?? "[REDACTED]";
     }
+  }
+
+  if((o as any).message.toUpperCase().includes("ECONNREFUSED")) {
+    o.message = "[REDACTED]";
   }
 
   const d = jsonSafeStringify(o);

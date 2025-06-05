@@ -11,9 +11,16 @@ export {
   type DropdownProps,
 } from "./Dropdown";
 
+export {
+  default as Envelope,
+  type EnvelopeProps,
+  type StyleProps as EnvelopeStyleProps,
+} from "./Envelope";
+
 export { default as FormGroup, type FormGroupProps } from "./FormGroup";
 export { default as Icon, type IconProps } from "./Icon";
 export { default as Link, type LinkProps } from "./Link";
+export { default as Loader, type LoaderProps } from "./Loader";
 
 export {
   default as Logo,
@@ -22,6 +29,7 @@ export {
 } from "./Logo";
 
 export { default as ResizableTextarea, type ResizableTextareaProps } from "./ResizableTextarea";
+export { default as SearchBox, type SearchBoxProps } from "./SearchBox";
 
 export {
   default as Select,

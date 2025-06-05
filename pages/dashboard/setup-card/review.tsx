@@ -5,11 +5,12 @@ import Card from "@/components/Card";
 import { useIsMobile } from "@/utils";
 import { useQueryState } from "@/hooks";
 import { flexCenter } from "@/styles/theme";
-import { Button, Icon, Typography, Wrapper } from "@/components";
+import { Button, FormGroup, Icon, Typography, Wrapper } from "@/components";
 
 
 const initialCardProps = {
   b: true,
+  hb: false,
   bs: true,
   bgl: true,
   i: "abc" as string | null,
@@ -91,6 +92,35 @@ const ReviewCard = () => {
             Confira cada detalhe do seu cartão, pois você não poderá editá-lo mais tarde. Se algo não parece bom você pode voltar e continuar editando agora.
           </Typography.Text>
           <Box
+            sx={{
+              width: "100%",
+              marginTop: "2.1875rem",
+
+              "& > span": {
+                color: "var(--text-secondary)",
+                fontSize: "0.95rem",
+                fontWeight: "normal",
+              },
+
+              "& > div": {
+                marginTop: "1.25rem",
+              },
+            }}
+          >
+            <Typography.Text>
+              Se você quiser, pode dar um nome a este cartão, assim ficará mais fácil encontrá-lo depois. Só você poderá ver esse nome.
+            </Typography.Text>
+            <FormGroup
+              type="text"
+              inputMode="text"
+              autoComplete="off"
+              spellCheck="false"
+              label="Nome do cartão"
+              borderColor="var(--accent-color)"
+              placeholder="Digite um nome para o cartão aqui..."
+            />
+          </Box>
+          <Box
             className="flex-stack spacing-1"
             sx={{
               width: "100%",
@@ -113,7 +143,7 @@ const ReviewCard = () => {
                 "& > .icon": {
                   fontSize: "24px",
                   fontWeight: 300,
-                  marginTop: "1px",
+                  marginTop: "2px",
                 },
 
                 "& > span": {
@@ -175,7 +205,7 @@ const ReviewCard = () => {
           sx={{
             width: "100%",
             height: "100%",
-            padding: "1rem 1.1rem",
+            padding: "3rem 1.5rem",
             overflow: "auto",
             ...flexCenter,
           }}
